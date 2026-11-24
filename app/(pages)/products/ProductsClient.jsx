@@ -287,44 +287,69 @@ const total = initialTotal;;
           {/* Products Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products?.map((product) => (
-              <Card key={product._id} className="relative mx-auto w-full max-w-sm pt-0 overflow-hidden hover:shadow-lg transition-shadow">
+              <Card key={product._id} className="relative mx-auto w-full max-w-sm overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full border-gray-200">
 
-                {/* Image */}
-                <div className="relative">
-                  <div className="absolute inset-0 z-30 aspect-video" />
+                {/* Image Container - Fixed Height */}
+                <div className="relative w-full h-56 bg-gray-100 overflow-hidden">
                   {product.mainImage?.asset?.url ? (
-                    <Image src={product.mainImage.asset.url} width={400} height={200} alt={product.mainImage.alt || product.name} unoptimized className="relative z-20 w-full object-cover" />
+                    <Image 
+                      src={product.mainImage.asset.url} 
+                      fill
+                      alt={product.mainImage.alt || product.name} 
+                      unoptimized 
+                      className="object-cover"
+                    />
                   ) : (
-                    <div className="relative z-20 w-full h-48 bg-gray-100 flex items-center justify-center text-gray-400">No image</div>
+                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                      No image
+                    </div>
                   )}
-                  <div className="absolute top-4 left-4 z-29">
-                    <Badge variant="default" className="bg-cyan-700 text-white [font-family:var(--font-montserrat)]">{product.category?.title}</Badge>
+                  {/* Badge Overlay */}
+                  <div className="absolute top-4 left-4 z-10">
+                    <Badge variant="default" className="bg-cyan-700 text-white text-xs font-semibold px-3 py-1 [font-family:var(--font-montserrat)]">
+                      {product.category?.title || 'Product'}
+                    </Badge>
                   </div>
                 </div>
 
-                {/* Content */}
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg [font-family:var(--font-montserrat)]">{product.name}</CardTitle>
-                  <CardDescription className="[font-family:var(--font-lato)]">{product.shortDescription}</CardDescription>
-                </CardHeader>
+                {/* Content Container - Flexible Growth */}
+                <div className="flex flex-col flex-grow p-5">
+                  {/* Title - Fixed Height Area */}
+                  <h3 className="text-lg font-bold text-primary-blue mb-3 line-clamp-2 min-h-[3.5rem] [font-family:var(--font-montserrat)]">
+                    {product.name}
+                  </h3>
 
-                <CardContent className="pb-2">
-                  <p className="text-sm text-primary-blue font-semibold [font-family:var(--font-montserrat)]">{product.price || 'Contact for pricing'}</p>
-                </CardContent>
+                  {/* Description - Fixed Height Area */}
+                  <p className="text-sm text-gray-600 mb-4 line-clamp-3 min-h-[4.5rem] leading-relaxed [font-family:var(--font-lato)]">
+                    {product.shortDescription}
+                  </p>
 
-                {/* Buttons */}
-                <CardFooter className="gap-2">
-                  <Link href={`/products/${product.slug}`} className="w-1/2">
-                    <Button className="cursor-pointer w-full bg-[#101828] hover:bg-cyan-700 text-white [font-family:var(--font-montserrat)]">Read More</Button>
-                  </Link>
-                  <Button onClick={() => {
-                    setIsModalOpen(true);
-                    setSelectedProduct({
-                      id: product.id || product._id,
-                      name: product.name || product.title
-                    });
-                  }}className="cursor-pointer w-1/2 bg-[#101828] hover:bg-cyan-700 text-white [font-family:var(--font-montserrat)]">Contact</Button>
-                </CardFooter>
+                  {/* Pricing - Fixed Height */}
+                  <p className="text-base text-primary-blue font-bold mb-6 min-h-[1.5rem] [font-family:var(--font-montserrat)]">
+                    {product.price || 'Contact for pricing'}
+                  </p>
+
+                  {/* Buttons - Fixed at Bottom */}
+                  <div className="flex gap-3 mt-auto">
+                    <Link href={`/products/${product.slug}`} className="w-1/2">
+                      <Button className="cursor-pointer w-full bg-[#101828] hover:bg-cyan-700 text-white font-semibold py-2.5 rounded-lg transition-colors [font-family:var(--font-montserrat)]">
+                        Read More
+                      </Button>
+                    </Link>
+                    <Button 
+                      onClick={() => {
+                        setIsModalOpen(true);
+                        setSelectedProduct({
+                          id: product.id || product._id,
+                          name: product.name || product.title
+                        });
+                      }}
+                      className="cursor-pointer w-1/2 bg-[#101828] hover:bg-cyan-700 text-white font-semibold py-2.5 rounded-lg transition-colors [font-family:var(--font-montserrat)]"
+                    >
+                      Contact
+                    </Button>
+                  </div>
+                </div>
               </Card>
             ))}
           </div>
